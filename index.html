@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream: #f5f0e8;
+      --ink: #1a1612;
+      --warm: #c8a97e;
+      --warm-light: #e8d9c4;
+      --accent: #8b4513;
+      --muted: #7a6f65;
+      --card-bg: #fdfaf5;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    header {
+      padding: 3.5rem 4rem 2.5rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--warm-light);
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .logo span { color: var(--accent); font-style: italic; }
+
+    .header-sub {
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1rem;
+    }
+
+    .enter-product-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: transparent;
+      border: 1px solid var(--warm);
+      color: var(--accent);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.65rem 1.3rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .enter-product-btn svg {
+      width: 13px;
+      height: 13px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+      transition: transform 0.22s ease;
+    }
+
+    .enter-product-btn:hover {
+      background: var(--accent);
+      color: var(--cream);
+      border-color: var(--accent);
+      box-shadow: 0 4px 20px rgba(139,69,19,0.18);
+    }
+
+    .enter-product-btn:hover svg {
+      transform: translateX(2px) translateY(-2px);
+    }
+
+    main {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 4rem 4rem 6rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .section-line { flex: 1; height: 1px; background: var(--warm-light); }
+
+    .count {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--warm);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 2px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .card:hover { transform: translateY(-4px); z-index: 2; box-shadow: 0 20px 60px rgba(26,22,18,0.12); }
+    .card:hover .img-wrap img { transform: scale(1.06); }
+    .card:hover .add-btn { opacity: 1; transform: translateY(0); }
+
+    .img-wrap {
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      background: var(--warm-light);
+      position: relative;
+    }
+
+    .img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      transition: transform 0.5s ease;
+      display: block;
+    }
+
+    .badge {
+      position: absolute;
+      top: 1rem; left: 1rem;
+      background: var(--ink);
+      color: var(--cream);
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+    }
+
+    .card-body {
+      padding: 1.4rem 1.6rem 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .category { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--warm); }
+
+    .product-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+
+    .product-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.55; margin-top: 0.15rem; }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--warm-light);
+    }
+
+    .price { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--ink); }
+
+    .price-orig {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: var(--muted);
+      text-decoration: line-through;
+      margin-left: 0.4rem;
+    }
+
+    .add-btn {
+      background: var(--accent);
+      color: var(--cream);
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.6rem 1.1rem;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s;
+    }
+
+    .add-btn:hover { background: var(--ink); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .status-msg {
+      grid-column: 1 / -1;
+      padding: 3rem 0;
+      font-size: 0.88rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .status-msg.loading::before {
+      content: '';
+      width: 16px; height: 16px;
+      border: 2px solid var(--warm-light);
+      border-top-color: var(--warm);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--warm);
+      border-top: 1px solid var(--warm-light);
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 2rem 1.5rem 1.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .header-right { align-items: flex-start; }
+      main { padding: 2.5rem 1.5rem 4rem; }
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 480px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">Maison<span>Goods</span></div>
+  </div>
+  <div class="header-right">
+    <div class="header-sub">Curated Collection · 2026</div>
+    <a href="add-product.html" class="enter-product-btn">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Enter Product
+    </a>
+  </div>
+</header>
+
+<main>
+  <div class="section-header">
+    <span class="section-title">All Products</span>
+    <div class="section-line"></div>
+    <span class="count" id="count">— items</span>
+  </div>
+  <div class="grid" id="grid">
+    <div class="status-msg loading">Loading products…</div>
+  </div>
+</main>
+
+<footer>© 2026 MaisonGoods — All rights reserved</footer>
+
+<script>
+  // ── Config ────────────────────────────────────────────────────────────────
+  const SHEET_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTZ-5Ax5dQVSfwLGInQB09F4wRAge9pT_dgLbAbB1fzbZg2R99WxiBG7X0bvCdnQPtdIxAQMmZteNLv/pub?output=csv";
+
+  // Three fetch strategies tried in order:
+  //  1. Direct (works when page is hosted on a server or CORS is allowed)
+  //  2. allorigins  (reliable public CORS proxy)
+  //  3. corsproxy.io
+  const STRATEGIES = [
+    () => fetch(SHEET_CSV),
+    () => fetch("https://api.allorigins.win/raw?url=" + encodeURIComponent(SHEET_CSV)),
+    () => fetch("https://corsproxy.io/?" + encodeURIComponent(SHEET_CSV)),
+  ];
+
+  // ── CSV parser (handles quoted fields) ───────────────────────────────────
+  function parseCSV(raw) {
+    const rows = [];
+    let row = [], field = '', q = false;
+    for (let i = 0; i < raw.length; i++) {
+      const c = raw[i], n = raw[i + 1];
+      if (q) {
+        if (c === '"' && n === '"') { field += '"'; i++; }
+        else if (c === '"')          { q = false; }
+        else                         { field += c; }
+      } else {
+        if      (c === '"')                    { q = true; }
+        else if (c === ',')                    { row.push(field.trim()); field = ''; }
+        else if (c === '\n' || (c === '\r' && n === '\n')) {
+          if (c === '\r') i++;
+          row.push(field.trim()); field = '';
+          if (row.some(Boolean)) rows.push(row);
+          row = [];
+        } else { field += c; }
+      }
+    }
+    row.push(field.trim());
+    if (row.some(Boolean)) rows.push(row);
+    return rows;
+  }
+
+  // ── Render ────────────────────────────────────────────────────────────────
+  function render(products) {
+    const grid = document.getElementById('grid');
+    const count = document.getElementById('count');
+    count.textContent = products.length + ' item' + (products.length !== 1 ? 's' : '');
+    grid.innerHTML = '';
+    products.forEach((p, i) => {
+      const delay = (0.05 + i * 0.07).toFixed(2);
+      grid.innerHTML += `
+        <div class="card" style="animation-delay:${delay}s">
+          <div class="img-wrap">
+            <img src="${p.img || ''}" alt="${p.name || ''}" loading="lazy"/>
+            ${p.badge ? `<span class="badge">${p.badge}</span>` : ''}
+          </div>
+          <div class="card-body">
+            <span class="category">${p.category || ''}</span>
+            <div class="product-name">${p.name || ''}</div>
+            <div class="product-desc">${p.desc || ''}</div>
+            <div class="card-footer">
+              <div>
+                <span class="price">${p.price || ''}</span>
+                ${p.orig ? `<span class="price-orig">${p.orig}</span>` : ''}
+              </div>
+              <button class="add-btn">Add to Cart</button>
+            </div>
+          </div>
+        </div>`;
+    });
+  }
+
+  function showError(msg) {
+    document.getElementById('grid').innerHTML =
+      `<div class="status-msg">${msg}</div>`;
+    document.getElementById('count').textContent = '—';
+  }
+
+  // ── Load ──────────────────────────────────────────────────────────────────
+  (async function load() {
+    for (const strategy of STRATEGIES) {
+      try {
+        const res = await strategy();
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const text = await res.text();
+        if (text.trimStart().startsWith('<')) throw new Error('Got HTML, not CSV');
+
+        const rows = parseCSV(text);
+        if (rows.length < 2) throw new Error('Sheet appears empty');
+
+        const hdrs = rows[0].map(h => h.toLowerCase());
+        const idx  = k => hdrs.indexOf(k);
+
+        const products = rows.slice(1)
+          .filter(r => r.some(Boolean))
+          .map(r => ({
+            name:     r[idx('name')]     || '',
+            category: r[idx('category')] || '',
+            desc:     r[idx('desc')]     || '',
+            price:    r[idx('price')]    || '',
+            orig:     r[idx('orig')]     || '',
+            badge:    r[idx('badge')]    || '',
+            img:      r[idx('img')]      || '',
+          }));
+
+        render(products);
+        return; // success — stop trying
+      } catch (e) {
+        console.warn('Strategy failed:', e.message);
+      }
+    }
+    // All three failed
+    showError('Could not load products. Make sure the Google Sheet is published via <strong>File → Share → Publish to web → CSV</strong>, then reload.');
+  })();
+</script>
+</body>
+</html>

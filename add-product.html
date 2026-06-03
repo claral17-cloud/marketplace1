@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enter Product — MaisonGoods</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream: #f5f0e8;
+      --ink: #1a1612;
+      --warm: #c8a97e;
+      --warm-light: #e8d9c4;
+      --accent: #8b4513;
+      --muted: #7a6f65;
+      --card-bg: #fdfaf5;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── Header ── */
+    header {
+      padding: 3.5rem 4rem 2.5rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--warm-light);
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .logo span { color: var(--accent); font-style: italic; }
+
+    .header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1rem;
+    }
+
+    .header-sub {
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      background: transparent;
+      border: 1px solid var(--warm-light);
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.65rem 1.3rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
+    }
+
+    .back-btn svg {
+      width: 13px; height: 13px;
+      stroke: currentColor; fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0;
+      transition: transform 0.22s ease;
+    }
+
+    .back-btn:hover {
+      background: var(--ink);
+      color: var(--cream);
+      border-color: var(--ink);
+    }
+
+    .back-btn:hover svg { transform: translateX(-2px); }
+
+    /* ── Main ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 4rem 4rem 6rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .section-line { flex: 1; height: 1px; background: var(--warm-light); }
+
+    /* ── Form card ── */
+    .form-card {
+      background: var(--card-bg);
+      padding: 3rem 3.5rem;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-intro {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--warm-light);
+    }
+
+    /* ── Field groups ── */
+    .field-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 2.5rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin-bottom: 2rem;
+    }
+
+    .field.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--warm);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .label-hint {
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: none;
+      font-style: italic;
+    }
+
+    input[type="text"],
+    input[type="url"],
+    textarea {
+      background: var(--cream);
+      border: 1px solid var(--warm-light);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 300;
+      padding: 0.85rem 1rem;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      resize: none;
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    input[type="text"]:focus,
+    input[type="url"]:focus,
+    textarea:focus {
+      border-color: var(--warm);
+      box-shadow: 0 0 0 3px rgba(200,169,126,0.12);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--warm-light);
+      font-style: italic;
+    }
+
+    textarea { height: 100px; }
+
+    /* ── Section divider ── */
+    .form-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 0.5rem 0 2rem;
+    }
+
+    .form-divider span {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .form-divider::before,
+    .form-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--warm-light);
+    }
+
+    /* ── Actions ── */
+    .form-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--warm-light);
+    }
+
+    .required-note {
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .submit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--accent);
+      color: var(--cream);
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      cursor: pointer;
+      transition: background 0.22s ease, box-shadow 0.22s ease, opacity 0.22s ease;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      background: var(--ink);
+      box-shadow: 0 8px 30px rgba(26,22,18,0.18);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .submit-btn svg {
+      width: 14px; height: 14px;
+      stroke: currentColor; fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    .spinner {
+      display: none;
+      width: 14px; height: 14px;
+      border: 2px solid rgba(245,240,232,0.3);
+      border-top-color: var(--cream);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .submit-btn.loading .spinner { display: block; }
+    .submit-btn.loading .btn-icon { display: none; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Success overlay ── */
+    .success-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26,22,18,0.55);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(4px);
+      animation: fadeIn 0.3s ease;
+    }
+
+    .success-overlay.visible { display: flex; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .success-card {
+      background: var(--card-bg);
+      padding: 3.5rem 4rem;
+      max-width: 440px;
+      width: 90%;
+      text-align: center;
+      animation: slideUp 0.35s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .success-icon {
+      width: 52px; height: 52px;
+      margin: 0 auto 1.5rem;
+      background: rgba(139,69,19,0.08);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-icon svg {
+      width: 24px; height: 24px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .success-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+    }
+
+    .success-msg {
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 2rem;
+    }
+
+    .success-redirect {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--warm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .redirect-dots span {
+      display: inline-block;
+      width: 4px; height: 4px;
+      background: var(--warm);
+      border-radius: 50%;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    .redirect-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .redirect-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes pulse {
+      0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+      40% { opacity: 1; transform: scale(1); }
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--warm);
+      border-top: 1px solid var(--warm-light);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      header { padding: 2rem 1.5rem 1.5rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .header-right { align-items: flex-start; }
+      main { padding: 2.5rem 1.5rem 4rem; }
+      .form-card { padding: 2rem 1.5rem; }
+      .field-group { grid-template-columns: 1fr; gap: 0; }
+      .field.full { grid-column: 1; }
+      .form-actions { flex-direction: column-reverse; gap: 1rem; align-items: flex-start; }
+      .success-card { padding: 2.5rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="logo">Maison<span>Goods</span></a>
+  <div class="header-right">
+    <div class="header-sub">Product Entry · 2026</div>
+    <a href="index.html" class="back-btn">
+      <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to Shop
+    </a>
+  </div>
+</header>
+
+<main>
+  <div class="section-header">
+    <span class="section-title">Enter a New Product</span>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="form-card">
+    <p class="form-intro">
+      Fill in the fields below to add a new product to the MaisonGoods collection.
+      The entry will be submitted directly to the Google Sheet powering the marketplace.
+      Fields marked with an asterisk (*) are recommended for a complete listing.
+    </p>
+
+    <!-- Core product identity -->
+    <div class="form-divider"><span>Product Identity</span></div>
+    <div class="field-group">
+      <div class="field">
+        <label for="name">Name <span class="label-hint">* required</span></label>
+        <input type="text" id="name" name="name" placeholder="e.g. Linen Throw Pillow" autocomplete="off" required />
+      </div>
+      <div class="field">
+        <label for="category">Category <span class="label-hint">* required</span></label>
+        <input type="text" id="category" name="category" placeholder="e.g. Textiles" autocomplete="off" required />
+      </div>
+      <div class="field full">
+        <label for="desc">Description <span class="label-hint">short product blurb</span></label>
+        <textarea id="desc" name="desc" placeholder="e.g. Hand-woven from 100% European linen, naturally softened."></textarea>
+      </div>
+    </div>
+
+    <!-- Pricing -->
+    <div class="form-divider"><span>Pricing</span></div>
+    <div class="field-group">
+      <div class="field">
+        <label for="price">Price <span class="label-hint">* required — include currency symbol</span></label>
+        <input type="text" id="price" name="price" placeholder="e.g. $48.00" autocomplete="off" required />
+      </div>
+      <div class="field">
+        <label for="orig">Original Price <span class="label-hint">optional — for sale items</span></label>
+        <input type="text" id="orig" name="orig" placeholder="e.g. $64.00" autocomplete="off" />
+      </div>
+    </div>
+
+    <!-- Display options -->
+    <div class="form-divider"><span>Display Options</span></div>
+    <div class="field-group">
+      <div class="field">
+        <label for="badge">Badge <span class="label-hint">optional — e.g. New, Sale, Limited</span></label>
+        <input type="text" id="badge" name="badge" placeholder="e.g. New Arrival" autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="img">Image URL <span class="label-hint">direct link to product image</span></label>
+        <input type="url" id="img" name="img" placeholder="https://example.com/image.jpg" autocomplete="off" />
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <span class="required-note">* Recommended fields for a complete listing</span>
+      <button class="submit-btn" id="submitBtn" type="button" onclick="handleSubmit()">
+        <span class="spinner"></span>
+        <svg class="btn-icon" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Submit Product
+      </button>
+    </div>
+  </div>
+</main>
+
+<footer>© 2026 MaisonGoods — All rights reserved</footer>
+
+<!-- Success overlay -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-card">
+    <div class="success-icon">
+      <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div class="success-title">Product Added</div>
+    <p class="success-msg">
+      Your product has been successfully submitted to the MaisonGoods collection.
+      It will appear in the shop once the sheet is refreshed.
+    </p>
+    <div class="success-redirect">
+      Returning to shop
+      <span class="redirect-dots">
+        <span></span><span></span><span></span>
+      </span>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Config ────────────────────────────────────────────────────────────────
+  // Replace with your deployed Google Apps Script Web App URL
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwD2Aap8bOTnVcL8-w1-Jk-NP6Q20y-fmveSJrcZwgSAT-FCATALFKxv4_XfMfulaMu/exec";
+
+  // ── Submit handler ────────────────────────────────────────────────────────
+  async function handleSubmit() {
+    const btn = document.getElementById('submitBtn');
+
+    // Gather field values — keys match the CSV column headers
+    const fields = {
+      name:     document.getElementById('name').value.trim(),
+      category: document.getElementById('category').value.trim(),
+      desc:     document.getElementById('desc').value.trim(),
+      price:    document.getElementById('price').value.trim(),
+      orig:     document.getElementById('orig').value.trim(),
+      badge:    document.getElementById('badge').value.trim(),
+      img:      document.getElementById('img').value.trim(),
+    };
+
+    // Basic validation
+    if (!fields.name || !fields.category || !fields.price) {
+      highlight(['name', 'category', 'price'].filter(k => !fields[k]));
+      return;
+    }
+
+    // Loading state
+    btn.disabled = true;
+    btn.classList.add('loading');
+    btn.querySelector('.submit-btn span:not(.spinner)') && null;
+
+    try {
+      // Build URL with query parameters matching CSV column names
+      const params = new URLSearchParams(fields);
+      const url = WEB_APP_URL + '?' + params.toString();
+
+      const res = await fetch(url, { method: 'GET', mode: 'no-cors' });
+      // no-cors: we can't read the response body, but the request goes through.
+      // Switch to mode:'cors' + POST if your Apps Script supports CORS headers.
+      showSuccess();
+    } catch (err) {
+      console.error('Submission error:', err);
+      btn.disabled = false;
+      btn.classList.remove('loading');
+      // Show inline error if the WEB_APP_URL is still the placeholder
+      if (WEB_APP_URL === 'PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+        alert('⚠️ Please replace WEB_APP_URL in add-product.html with your deployed Google Apps Script URL.');
+      } else {
+        alert('Submission failed. Please try again or contact the site administrator.');
+      }
+    }
+  }
+
+  // ── Highlight invalid fields ──────────────────────────────────────────────
+  function highlight(ids) {
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.borderColor = 'var(--accent)';
+      el.style.boxShadow = '0 0 0 3px rgba(139,69,19,0.14)';
+      el.addEventListener('input', () => {
+        el.style.borderColor = '';
+        el.style.boxShadow = '';
+      }, { once: true });
+    });
+    document.getElementById(ids[0])?.focus();
+  }
+
+  // ── Show success & redirect ───────────────────────────────────────────────
+  function showSuccess() {
+    const overlay = document.getElementById('successOverlay');
+    overlay.classList.add('visible');
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 2800);
+  }
+</script>
+</body>
+</html>
